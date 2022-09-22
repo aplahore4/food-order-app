@@ -1,46 +1,56 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import classes from './AvailableMeals.module.css'
 import Card from '../UI/Card'
 import MealItem from './MealItem/MealItem'
 
 const AvailableMeals = () => {
-  const meals = [
-    {
-      key: 1,
-      id: 1,
-      name: 'A',
-      description: 'D',
-      price: 10,
-    },
-    {
-      key: 2,
-      id: 2,
-      name: 'A',
-      description: 'D',
-      price: 10,
-    },
-    {
-      key: 3,
-      id: 3,
-      name: 'A',
-      description: 'D',
-      price: 10,
-    },
-    {
-      key: 4,
-      id: 4,
-      name: 'A',
-      description: 'D',
-      price: 10,
-    },
-    {
-      key: 5,
-      id: 5,
-      name: 'A',
-      description: 'D',
-      price: 10,
-    },
-  ]
+  const [meals, setMeals] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [httpError, setHttpError] = useState()
+
+  useEffect(() => {
+    const fetchMeals = async () => {
+      const response = await fetch(
+        'https://react-39886-default-rtdb.asia-southeast1.firebasedatabase.app/meals.json'
+      )
+      if (!response.ok) {
+        throw new Error('Something went wrong!')
+      }
+      const responseData = await response.json()
+      const loadMeals = []
+      for (const key in responseData) {
+        loadMeals.push({
+          id: key,
+          name: responseData[key].name,
+          description: responseData[key].description,
+          price: responseData[key].price,
+        })
+      }
+      setMeals(loadMeals)
+      setIsLoading(false)
+    }
+    fetchMeals().catch((error) => {
+      setIsLoading(false)
+      setHttpError(error.message)
+    })
+  }, [])
+
+  if (isLoading) {
+    return (
+      <section className={classes.MealsLoading}>
+        <p>Loading...</p>
+      </section>
+    )
+  }
+
+  if (httpError) {
+    return (
+      <section className={classes.MealsError}>
+        <p>httpError</p>
+      </section>
+    )
+  }
+
   const mealsList = meals.map((meal, index) => (
     <MealItem
       key={index}

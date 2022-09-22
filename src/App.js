@@ -1,15 +1,15 @@
-import { Fragment } from 'react'
 import Header from './Layout/Header'
 import Meals from './Meals/Meals'
+import CartProvider from './store/CartProvider'
 
 function App() {
   return (
-    <Fragment>
+    <CartProvider>
       <Header></Header>
       <main>
         <Meals></Meals>
       </main>
-    </Fragment>
+    </CartProvider>
   )
 }
 
