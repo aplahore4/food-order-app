@@ -46,7 +46,7 @@ const AvailableMeals = () => {
   if (httpError) {
     return (
       <section className={classes.MealsError}>
-        <p>httpError</p>
+        <p>{httpError}</p>
       </section>
     )
   }
